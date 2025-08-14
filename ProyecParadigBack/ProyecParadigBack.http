@@ -1,0 +1,6 @@
+@ProyecParadigBack_HostAddress = http://localhost:5069
+
+GET {{ProyecParadigBack_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

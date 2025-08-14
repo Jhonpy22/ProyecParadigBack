@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProyecParadigBack", "ProyecParadigBack\ProyecParadigBack.csproj", "{DE2FC0BD-A95C-432E-91FA-63FB38B2CD97}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE2FC0BD-A95C-432E-91FA-63FB38B2CD97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE2FC0BD-A95C-432E-91FA-63FB38B2CD97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE2FC0BD-A95C-432E-91FA-63FB38B2CD97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE2FC0BD-A95C-432E-91FA-63FB38B2CD97}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3C0ECE70-E744-4DC4-93B8-1FC90436581D}
+	EndGlobalSection
+EndGlobal
