@@ -13,7 +13,9 @@ namespace Domain.States.Salas
 
         public Task FinalizarAsync(Sala sala)
         {
-            sala.Estado = EstadoSala.Finalizada;
+            sala.Estado = EstadoSala.Lobby;
+            sala.PartidaActual = null;
+            sala.PartidaActualId = null;
             return Task.CompletedTask;
         }
     }
