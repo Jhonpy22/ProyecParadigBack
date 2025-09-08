@@ -9,20 +9,21 @@ namespace Domain.States.Turnos
     {
         public Task VoltearAsync(Partida j, int jugadorId, int indice)
         {
-            if (j.Expirada(DateTime.UtcNow))
-                throw new InvalidOperationException("La partida expiró.");
-
-            if (j.Estado != EstadoPartida.EnProgreso)
+            if (FinalizacionDePartida.DebeExpirar(j, DateTime.UtcNow))
             {
-                throw new InvalidOperationException("La partida no está en progreso.");
+                FinalizacionDePartida.FinalizarYVolverAlLobby(j);
+                return Task.CompletedTask;
             }
-            if (j.JugadorActualId != jugadorId)
-            {
-                throw new InvalidOperationException("No es tu turno.");
-            }
-            var carta = j.Tablero.SingleOrDefault(c => c.Indice == indice) ?? throw new InvalidOperationException("Índice inválido.");
 
-            if (carta.EstaEmparejada) throw new InvalidOperationException("Carta ya tomada.");
+
+            ValidacionesDeTurno.AsegurarTurnoValido(j, jugadorId);
+
+            var carta = j.Tablero.SingleOrDefault(c => c.Indice == indice)
+                        ?? throw new InvalidOperationException("Índice de carta inválido.");
+
+            if (carta.EstaEmparejada)
+                throw new InvalidOperationException("La carta ya está tomada.");
+
             j.IndicePrimerVolteo = carta.Indice;
             return Task.CompletedTask;
 

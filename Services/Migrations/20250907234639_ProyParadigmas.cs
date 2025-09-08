@@ -87,6 +87,7 @@ namespace Services.Migrations
                     IndicePrimerVolteo = table.Column<int>(type: "int", nullable: true),
                     DuracionSegundos = table.Column<int>(type: "int", nullable: false),
                     IniciadaUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PuntosPorPareja = table.Column<int>(type: "int", nullable: false),
                     FinalizadaUtc = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>

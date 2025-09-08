@@ -30,6 +30,9 @@ namespace Services.Data.Configurations
              .HasForeignKey(x => x.GanadorId)
              .OnDelete(DeleteBehavior.NoAction);
 
+            b.Property(x => x.PuntosPorPareja).IsRequired();
+
+
             b.HasMany(x => x.Tablero).WithOne(c => c.Partida).HasForeignKey(c => c.PartidaId);
 
             b.HasMany(x => x.PartidaJugadores).WithOne(pj => pj.Partida).HasForeignKey(pj => pj.PartidaId);

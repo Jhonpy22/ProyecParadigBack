@@ -16,6 +16,14 @@ public class LobbyState: IEstadoSala
 
         if (sala.Jugadores.Count >= sala.MaxJugadores)
             throw new InvalidOperationException("La sala está llena.");
+
+        sala.Jugadores.Add(new SalaJugador
+        {
+            SalaId = sala.SalaId,
+            JugadorId = jugador.JugadorId,
+            OrdenTurno = sala.Jugadores.Count + 1
+        });
+
         return Task.CompletedTask;
     }
 
@@ -25,7 +33,7 @@ public class LobbyState: IEstadoSala
             throw new InvalidOperationException("No se puede iniciar: la sala no está en Lobby.");
 
         if (filas <= 0 || columnas <= 0 || (filas * columnas) % 2 != 0)
-            throw new InvalidOperationException("Dimensiones inválidas (rows*cols debe ser par).");
+            throw new InvalidOperationException("Dimensiones inválidas (filas*columnas debe ser par).");
 
         if (sala.Jugadores is null || sala.Jugadores.Count < 2)
             throw new InvalidOperationException("Se requieren al menos 2 jugadores.");

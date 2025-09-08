@@ -149,6 +149,9 @@ namespace Services.Migrations
                     b.Property<int?>("PuntajeGanador")
                         .HasColumnType("int");
 
+                    b.Property<int>("PuntosPorPareja")
+                        .HasColumnType("int");
+
                     b.Property<int>("SalaId")
                         .HasColumnType("int");
 
