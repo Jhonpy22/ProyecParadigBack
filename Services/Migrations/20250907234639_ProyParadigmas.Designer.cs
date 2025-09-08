@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Services.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250901060856_ProyParadigmas")]
+    [Migration("20250907234639_ProyParadigmas")]
     partial class ProyParadigmas
     {
         /// <inheritdoc />
@@ -150,6 +150,9 @@ namespace Services.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("PuntajeGanador")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PuntosPorPareja")
                         .HasColumnType("int");
 
                     b.Property<int>("SalaId")

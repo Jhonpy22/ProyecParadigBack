@@ -2,7 +2,7 @@
 namespace Application.Contratos.Salas
 {
     public sealed record CrearSalaRequest(
-    int CreadorId,
+     string NombreJugador,
     int MaxJugadores,
     string? CodigoIngreso
     );

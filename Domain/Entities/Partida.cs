@@ -10,6 +10,7 @@ namespace Domain.Entities
         public int SalaId { get; set; }
         public Sala Sala { get; set; } = null!;
 
+        
         public int? GanadorId { get; set; }
         public Jugador? Ganador { get; set; }
         public int? PuntajeGanador { get; set; }
@@ -43,6 +44,15 @@ namespace Domain.Entities
             DuracionSegundos = duracionSegundos;
            
         }
+
+        public int PuntosPorPareja { get; private set; } = 1;
+
+        public void EstablecerPuntosPorPareja(int puntos)
+        {
+            if (puntos <= 0) throw new InvalidOperationException("Puntos por pareja debe ser > 0.");
+            PuntosPorPareja = puntos;
+        }
+
 
         public bool Expirada(DateTime ahoraUtc)
             => ahoraUtc >= IniciadaUtc.AddSeconds(DuracionSegundos);
