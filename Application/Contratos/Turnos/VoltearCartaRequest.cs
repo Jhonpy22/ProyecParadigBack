@@ -4,7 +4,7 @@ namespace Application.Contratos.Turnos
 {
     public sealed record VoltearCartaRequest(
     int PartidaId,
-    int JugadorId,
+    string NombreJugador,
     int Indice
     );
 }

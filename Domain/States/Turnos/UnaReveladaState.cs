@@ -43,7 +43,7 @@ namespace Domain.States.Turnos
                 segunda.EstaEmparejada = true;
 
                 var gp = p.PartidaJugadores.Single(x => x.JugadorId == jugadorId);
-                gp.Puntaje += 1;
+                gp.Puntaje += p.PuntosPorPareja;
 
                 if (p.Tablero.All(c => c.EstaEmparejada))
                 {
