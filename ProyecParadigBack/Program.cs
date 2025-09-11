@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using ProyecParadigBack.Hubs;
 using ProyecParadigBack.Middlewares;
+using ProyecParadigBack.Notificadores;
 using Serilog;
 using ServicesApp;
 
@@ -26,6 +27,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("defaultConnectio
 builder.Services.AddScoped<ISvSalas, SvSalas>();
 builder.Services.AddScoped<ISvPartidas, SvPartidas>();
 builder.Services.AddScoped<ISvTurnos, SvTurnos>();
+builder.Services.AddScoped<INotificadorJuego, NotificadorJuegoSignalR>();
 
 builder.Services.AddCors(options =>
 {
