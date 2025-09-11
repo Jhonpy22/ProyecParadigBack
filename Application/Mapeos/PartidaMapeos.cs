@@ -11,16 +11,17 @@ namespace Application.Mapeos
             => new(
                 PartidaId: p.PartidaId,
                 SalaId: p.SalaId,
+                SalaCodigo: p.Sala.CodigoIngreso,
                 Estado: p.Estado,
                 Dificultad: p.Dificultad,
                 Filas: p.Filas,
                 Columnas: p.Columnas,
                 DuracionSegundos: p.DuracionSegundos,
                 IniciadaUtc: p.IniciadaUtc,
-                JugadorActualId: p.JugadorActualId,
+                JugadorActualId: p.JugadorActualId!.Value,
                 NumeroTurno: p.NumeroTurno,
-                GanadorId: p.GanadorId,
-                PuntajeGanador: p.PuntajeGanador,
+                GanadorId: p.GanadorId!.Value,
+                PuntajeGanador: p.PuntajeGanador!.Value,
                 Jugadores: p.PartidaJugadores
                     .OrderBy(j => j.OrdenTurno)
                     .Select(j => new PartidaJugadorDto(

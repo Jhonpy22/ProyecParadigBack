@@ -5,6 +5,7 @@
         public sealed record PartidaDto(
          int PartidaId,
          int SalaId,
+         string SalaCodigo,
          EstadoPartida Estado,
          Dificultad Dificultad,
          int Filas,

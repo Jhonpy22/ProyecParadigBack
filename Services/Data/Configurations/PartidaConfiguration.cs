@@ -30,6 +30,12 @@ namespace Services.Data.Configurations
              .HasForeignKey(x => x.GanadorId)
              .OnDelete(DeleteBehavior.NoAction);
 
+            b.HasOne(x => x.Sala)
+             .WithMany(s => s.Partidas)
+             .HasForeignKey(x => x.SalaId)
+             .OnDelete(DeleteBehavior.Cascade);
+
+
             b.Property(x => x.PuntosPorPareja).IsRequired();
 
 
