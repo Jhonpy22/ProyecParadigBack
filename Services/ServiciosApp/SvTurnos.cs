@@ -3,8 +3,10 @@ using Application.Contratos.Partidas;
 using Application.Contratos.Turnos;
 using Application.Interfaces;
 using Application.Mapeos;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 
 namespace ServicesApp
 {
@@ -13,11 +15,14 @@ namespace ServicesApp
     {
         private readonly AppDbContext _db;
         private readonly ILogger<SvTurnos> _logger;
+        private readonly INotificadorJuego _notificador;
 
-        public SvTurnos(AppDbContext db, ILogger<SvTurnos> logger)
+
+        public SvTurnos(AppDbContext db, ILogger<SvTurnos> logger, INotificadorJuego notificador)
         {
             _db = db;
             _logger = logger;
+            _notificador = notificador;
         }
 
       
@@ -40,7 +45,8 @@ namespace ServicesApp
            
             await req.AplicarAsync(p);
 
-            
+            await EliminarSalaSiFinalizadaAsync(p);
+
             await _db.SaveChangesAsync();
 
             var mov = p.Movimientos.OrderByDescending(m => m.CreadoUtc).FirstOrDefault();
@@ -58,6 +64,15 @@ namespace ServicesApp
 
 
             return p.ADto();
+
+        }
+        private async Task EliminarSalaSiFinalizadaAsync(Domain.Entities.Partida p)
+        {
+            if (p.Estado == EstadoPartida.Finalizada)
+            {
+                await _notificador.EnviarPartidaFinalizadaAsync(p.ADto(), "Tiempo agotado");
+                _db.Salas.Remove(p.Sala);
+            }
         }
     }
 }
