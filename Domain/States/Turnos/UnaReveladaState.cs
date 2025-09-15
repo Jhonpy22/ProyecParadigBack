@@ -57,10 +57,17 @@ namespace Domain.States.Turnos
             }
             else
             {
-                
-                p.IndicePrimerVolteo = null;
-                p.JugadorActualId = NextPlayerId(p);
+
+                if (p.JugadorActualId.HasValue)
+                {
+                    p.JugadorActualId = NextPlayerId(p);
+                }
+
                 p.NumeroTurno++;
+
+                p.IndicePrimerVolteo = null;
+
+                Console.WriteLine($"Turno cambiado -> JugadorActual={p.JugadorActualId}, NumeroTurno={p.NumeroTurno}");
                 return Task.CompletedTask;
             }
         }

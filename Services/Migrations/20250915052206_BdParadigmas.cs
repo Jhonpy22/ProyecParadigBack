@@ -129,7 +129,8 @@ namespace Services.Migrations
                         name: "FK_Salas_Partidas_PartidaActualId",
                         column: x => x.PartidaActualId,
                         principalTable: "Partidas",
-                        principalColumn: "PartidaId");
+                        principalColumn: "PartidaId",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(

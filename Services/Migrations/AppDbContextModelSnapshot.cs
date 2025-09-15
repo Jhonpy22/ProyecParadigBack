@@ -327,7 +327,7 @@ namespace Services.Migrations
                     b.HasOne("Domain.Entities.Partida", "PartidaActual")
                         .WithMany()
                         .HasForeignKey("PartidaActualId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Anfitrion");
 
