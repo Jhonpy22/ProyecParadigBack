@@ -37,7 +37,12 @@ namespace ServicesApp
 
                 var p = await CargarPartidaCompletaAsync(req.PartidaId);
 
-                
+                if (p.Estado == EstadoPartida.Finalizada)
+                {
+                    _logger.LogWarning("Intento de voltear carta en partida finalizada: PartidaId={PartidaId}", p.PartidaId);
+                    throw new BusinessException("La partida ya está finalizada, no se pueden realizar más movimientos.");
+                }
+
                 await req.AplicarAsync(p);
 
                
