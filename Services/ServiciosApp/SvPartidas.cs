@@ -34,9 +34,16 @@ namespace ServicesApp
                 .SingleOrDefaultAsync(s => s.SalaId == req.SalaId)
             ?? throw new NotFoundException("Sala no existe.");
 
-            await FabricaEstadoSala.From(sala).IniciarAsync(sala, dFilas, dColumnas);
-
-            var partida = req.Construir(sala, dFilas, dColumnas, dDuracion);
+            if (sala.Estado == EstadoSala.Finalizada)
+            {
+                _logger.LogWarning("Intento de iniciar partida en sala finalizada SalaId={SalaId}", sala.SalaId);
+                throw new BusinessException("No se puede iniciar una partida en una sala finalizada.");
+            }
+            if (sala.Estado == EstadoSala.EnJuego)
+            {
+                _logger.LogWarning("Intento de iniciar nueva partida cuando ya hay una en curso en SalaId={SalaId}", sala.SalaId);
+                throw new BusinessException("No se puede iniciar una nueva partida mientras hay una en curso.");
+            }
 
             int dFilas, dColumnas, dDuracion, dPuntos;
             switch (req.Dificultad)
@@ -50,7 +57,9 @@ namespace ServicesApp
             }
 
         
-    
+            await FabricaEstadoSala.From(sala).IniciarAsync(sala, dFilas, dColumnas);
+
+            var partida = req.Construir(sala, dFilas, dColumnas, dDuracion);
 
        
             partida.EstablecerPuntosPorPareja(dPuntos);
