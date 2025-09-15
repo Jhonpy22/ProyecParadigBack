@@ -33,12 +33,11 @@ builder.Services.AddScoped<INotificadorJuego, NotificadorJuegoSignalR>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddDefaultPolicy(policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173", "http://localhost:5174") 
-              .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials(); 
+       policy.AllowAnyOrigin()         
+              .AllowAnyHeader()          
+              .AllowAnyMethod();
     });
 });
 
@@ -57,7 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors();
+app.UseCors("AllowFrontend");
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseSerilogRequestLogging();
 app.UseHttpsRedirection();
