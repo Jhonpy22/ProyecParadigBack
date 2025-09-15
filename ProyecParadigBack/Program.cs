@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using ProyecParadigBack.Hubs;
 using ProyecParadigBack.Middlewares;
@@ -28,6 +29,7 @@ builder.Services.AddScoped<ISvSalas, SvSalas>();
 builder.Services.AddScoped<ISvPartidas, SvPartidas>();
 builder.Services.AddScoped<ISvTurnos, SvTurnos>();
 builder.Services.AddScoped<INotificadorJuego, NotificadorJuegoSignalR>();
+
 
 builder.Services.AddCors(options =>
 {
@@ -66,4 +68,25 @@ app.UseAuthorization();
 app.MapHub<GameHub>("/hubs/game");
 app.MapControllers();
 
+/*using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    var limite = DateTime.UtcNow.AddHours(-1);
+
+    var salasInactivas = db.Salas
+        .Include(s => s.Partidas)
+        .Include(s => s.Jugadores)
+        .Where(s =>
+            s.Estado == EstadoSala.Lobby &&
+            !s.Jugadores.Any() &&
+            (
+                !s.Partidas.Any() ||
+                s.Partidas.All(p => p.FinalizadaUtc != null && p.FinalizadaUtc < limite)
+            )
+        ).ToList();
+
+    db.Salas.RemoveRange(salasInactivas);
+    db.SaveChanges();
+    Console.WriteLine($"Se eliminaron {salasInactivas.Count} salas inactivas.");
+}*/
 app.Run();

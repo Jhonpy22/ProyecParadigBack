@@ -46,7 +46,7 @@ namespace ServicesApp
             var sala = req.Construir(anfitrion);
 
 
-            if (string.IsNullOrWhiteSpace(sala.CodigoIngreso))
+            if (!string.IsNullOrWhiteSpace(sala.CodigoIngreso))
             {
                 var up = sala.CodigoIngreso.Trim().ToUpperInvariant();
                 var existe = await _db.Salas.AnyAsync(s => s.CodigoIngreso == up);

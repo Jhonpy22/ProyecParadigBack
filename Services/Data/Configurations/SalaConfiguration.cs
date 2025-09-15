@@ -22,7 +22,7 @@ namespace Services.Data.Configurations
             b.HasOne(x => x.PartidaActual)
              .WithMany()
              .HasForeignKey(p => p.PartidaActualId)
-             .OnDelete(DeleteBehavior.NoAction);
+             .OnDelete(DeleteBehavior.SetNull);
 
             b.HasOne(x => x.Anfitrion)
             .WithMany()

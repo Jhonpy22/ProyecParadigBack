@@ -34,7 +34,9 @@ namespace ServicesApp
                 .SingleOrDefaultAsync(s => s.SalaId == req.SalaId)
             ?? throw new NotFoundException("Sala no existe.");
 
-        
+            await FabricaEstadoSala.From(sala).IniciarAsync(sala, dFilas, dColumnas);
+
+            var partida = req.Construir(sala, dFilas, dColumnas, dDuracion);
 
             int dFilas, dColumnas, dDuracion, dPuntos;
             switch (req.Dificultad)
@@ -48,9 +50,7 @@ namespace ServicesApp
             }
 
         
-            await FabricaEstadoSala.From(sala).IniciarAsync(sala, dFilas, dColumnas);
-
-            var partida = req.Construir(sala, dFilas, dColumnas, dDuracion);
+    
 
        
             partida.EstablecerPuntosPorPareja(dPuntos);
