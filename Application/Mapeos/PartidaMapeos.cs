@@ -18,10 +18,10 @@ namespace Application.Mapeos
                 Columnas: p.Columnas,
                 DuracionSegundos: p.DuracionSegundos,
                 IniciadaUtc: p.IniciadaUtc,
-                JugadorActualId: p.JugadorActualId!.Value,
+                JugadorActualId: p.JugadorActualId ?? 0,
                 NumeroTurno: p.NumeroTurno,
-                GanadorId: p.GanadorId!.Value,
-                PuntajeGanador: p.PuntajeGanador!.Value,
+                GanadorId: p.GanadorId ?? 0,
+                PuntajeGanador: p.PuntajeGanador ?? 0,
                 Jugadores: p.PartidaJugadores
                     .OrderBy(j => j.OrdenTurno)
                     .Select(j => new PartidaJugadorDto(

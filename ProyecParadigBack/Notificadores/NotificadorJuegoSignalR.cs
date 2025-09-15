@@ -8,22 +8,39 @@ namespace ProyecParadigBack.Notificadores
     public class NotificadorJuegoSignalR : INotificadorJuego
     {
         private readonly IHubContext<GameHub> _hub;
+        private readonly ILogger<NotificadorJuegoSignalR> _logger;
 
-        public NotificadorJuegoSignalR(IHubContext<GameHub> hub)
+        public NotificadorJuegoSignalR(IHubContext<GameHub> hub, ILogger<NotificadorJuegoSignalR> logger)
         {
             _hub = hub;
+            _logger = logger;
         }
 
         public async Task EnviarPartidaFinalizadaAsync(PartidaDto partida, string motivo)
         {
-            var ganador = partida.Jugadores.FirstOrDefault(j => j.JugadorId == partida.GanadorId);
+            try
+            {
+                var ganador = partida.Jugadores.FirstOrDefault(j => j.JugadorId == partida.GanadorId);
 
-            await _hub.Clients.Group(partida.SalaCodigo)
-                .SendAsync("GameEnded", new { 
-                    motivo,
-                    ganador = ganador?.Nombre ?? "Sin ganador",
-                    puntajeGanador = ganador?.Puntaje ?? 0
-                });
+                await _hub.Clients.Group(partida.SalaCodigo)
+                    .SendAsync("GameEnded", new
+                    {
+                        motivo,
+                        ganador = ganador?.Nombre ?? "Sin ganador",
+                        puntajeGanador = ganador?.Puntaje ?? 0,
+                        partidaId = partida.PartidaId,
+                        // Indicar que la sala vuelve a lobby
+                        redirectToLobby = true
+                    });
+
+                _logger.LogInformation("Notificación enviada - GameEnded para sala:{SalaCodigo}", partida.SalaCodigo);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error enviando notificación GameEnded - Sala:{SalaCodigo}", partida.SalaCodigo);
+                throw;
+            }
         }
     }
+    
 }

@@ -3,6 +3,7 @@ using Application.Contratos.Partidas;
 using Application.Contratos.Turnos;
 using Application.Interfaces;
 using Application.Mapeos;
+using Domain.Entities;
 using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,51 +29,130 @@ namespace ServicesApp
       
         public async Task<PartidaDto> VoltearAsync(VoltearCartaRequest req)
         {
-            _logger.LogInformation("Voltear carta: PartidaId={PartidaId}, JugadorId={JugadorId}, Indice={Indice}",
-               req.PartidaId, req.NombreJugador, req.Indice);
+            using var transaction = await _db.Database.BeginTransactionAsync();
+            try {
 
+                _logger.LogInformation("Voltear carta: PartidaId={PartidaId}, JugadorId={JugadorId}, Indice={Indice}",
+                   req.PartidaId, req.NombreJugador, req.Indice);
+
+                var p = await CargarPartidaCompletaAsync(req.PartidaId);
+
+                
+                await req.AplicarAsync(p);
+
+               
+                var resultadoFinalizacion = await ProcesarFinalizacionAsync(p);
+
+                
+                await _db.SaveChangesAsync();
+                _db.Entry(p).State = EntityState.Detached;
+                await transaction.CommitAsync();
+
+                _logger.LogInformation("Volteo completado - EstadoPartida:{Estado}, SalaEstado:{SalaEstado}",
+                    p.Estado, p.Sala.Estado);
+
+                
+                _ = Task.Run(async () => await EnviarNotificacionesAsync(p, resultadoFinalizacion));
+
+                return p.ADto();
+
+            }
+            catch (Exception ex) {
+                _logger.LogError(ex, "Error en volteo - Partida:{PartidaId}, Jugador:{Jugador}",
+                req.PartidaId, req.NombreJugador);
+
+                await transaction.RollbackAsync();
+                throw;
+            }
+
+        }
+
+
+        private async Task<Partida> CargarPartidaCompletaAsync(int partidaId)
+        {
             var p = await _db.Partidas
                 .Include(x => x.Sala)
-                .Include(x => x.PartidaJugadores)
-                    .ThenInclude(pj => pj.Jugador)
+                .Include(x => x.PartidaJugadores).ThenInclude(pj => pj.Jugador)
                 .Include(x => x.Tablero)
                 .Include(x => x.Movimientos)
-                .SingleOrDefaultAsync(x => x.PartidaId == req.PartidaId);
+                .SingleOrDefaultAsync(x => x.PartidaId == partidaId);
 
             if (p == null)
                 throw new NotFoundException("Partida no existe.");
 
-           
-            await req.AplicarAsync(p);
-
-            await EliminarSalaSiFinalizadaAsync(p);
-
-            await _db.SaveChangesAsync();
-
-            var mov = p.Movimientos.OrderByDescending(m => m.CreadoUtc).FirstOrDefault();
-            if (mov is not null)
-            {
-                _logger.LogInformation(
-                    "Movimiento registrado: PartidaId={PartidaId}, JugadorId={JugadorId}, Indices=({Primero},{Segundo}), FuePareja={FuePareja}, Turno={Turno}, EstadoPartida={Estado}",
-                    mov.PartidaId, mov.JugadorId, mov.IndicePrimero, mov.IndiceSegundo, mov.FuePareja, p.NumeroTurno, p.Estado);
-            }
-            else
-            {
-                
-                _logger.LogWarning("No se encontró movimiento tras aplicar VoltearCarta. PartidaId={PartidaId}", req.PartidaId);
-            }
-
-
-            return p.ADto();
-
+            return p;
         }
-        private async Task EliminarSalaSiFinalizadaAsync(Domain.Entities.Partida p)
+
+        private async Task<ResultadoFinalizacion> ProcesarFinalizacionAsync(Partida p)
         {
+            var resultado = new ResultadoFinalizacion { PartidaFinalizada = false };
+
             if (p.Estado == EstadoPartida.Finalizada)
             {
-                await _notificador.EnviarPartidaFinalizadaAsync(p.ADto(), "Tiempo agotado");
-                _db.Salas.Remove(p.Sala);
+                p.Sala.Estado = EstadoSala.Finalizada;
+                
+                p.Sala.PartidaActual = null;
+                p.Sala.PartidaActualId = null;
+
+                if (!p.FinalizadaUtc.HasValue)
+                {
+                    p.FinalizadaUtc = DateTime.UtcNow;
+                }
+
+                resultado.PartidaFinalizada = true;
+                resultado.Motivo = DeterminarMotivoFinalizacion(p);
+                resultado.SalaCodigo = p.Sala.CodigoIngreso;
+                resultado.PartidaDto = p.ADto();
+            }
+
+            return resultado;
+        }
+
+
+        private async Task EnviarNotificacionesAsync(Partida p, ResultadoFinalizacion resultado)
+        {
+            try
+            {
+                if (resultado.PartidaFinalizada)
+                {
+                    await _notificador.EnviarPartidaFinalizadaAsync(
+                        resultado.PartidaDto,
+                        resultado.Motivo
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Error enviando notificaciones - Partida:{PartidaId}", p.PartidaId);
+                
             }
         }
+
+        private string DeterminarMotivoFinalizacion(Partida p)
+        {
+            if (p.Expirada(DateTime.UtcNow))
+                return "Tiempo agotado";
+
+            if (p.Tablero.All(c => c.EstaEmparejada))
+                return "Juego completado";
+
+            return "Partida finalizada";
+        }
     }
+
+    
+    public class ResultadoFinalizacion
+    {
+        public bool PartidaFinalizada { get; set; }
+        public string Motivo { get; set; } = string.Empty;
+        public string SalaCodigo { get; set; } = string.Empty;
+        public PartidaDto PartidaDto { get; set; } = null!;
+    }
+
+
+      
+
+
+
+   
 }

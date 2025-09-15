@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Services.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250911050750_BdParadigmas")]
+    [Migration("20250915052206_BdParadigmas")]
     partial class BdParadigmas
     {
         /// <inheritdoc />
@@ -330,7 +330,7 @@ namespace Services.Migrations
                     b.HasOne("Domain.Entities.Partida", "PartidaActual")
                         .WithMany()
                         .HasForeignKey("PartidaActualId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Anfitrion");
 
