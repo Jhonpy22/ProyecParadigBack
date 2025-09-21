@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Services.Migrations
 {
     /// <inheritdoc />
-    public partial class BdParadigmas : Migration
+    public partial class BdParadigma : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

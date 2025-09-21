@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Services.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250915052206_BdParadigmas")]
-    partial class BdParadigmas
+    [Migration("20250921210002_BdParadigma")]
+    partial class BdParadigma
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
