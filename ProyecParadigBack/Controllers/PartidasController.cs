@@ -25,7 +25,7 @@ namespace ProyecParadigBack.Controllers
         {
             var partida = await _svPartidas.IniciarAsync(request);
 
-            await _hub.Clients.Group(partida.SalaId.ToString())
+            await _hub.Clients.Group(partida.SalaCodigo)
                 .SendAsync("GameUpdated", partida);
 
             return CreatedAtAction(nameof(ObtenerPartida), new { partidaId = partida.PartidaId }, partida);

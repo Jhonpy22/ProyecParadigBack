@@ -9,7 +9,7 @@ namespace ProyecParadigBack.Hubs
         public override async Task OnConnectedAsync()
         {
             await base.OnConnectedAsync();
-            await Clients.Caller.SendAsync("OnConnected", "Conectado al GameHub correctamente.");
+            
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
@@ -20,7 +20,7 @@ namespace ProyecParadigBack.Hubs
         public async Task JoinRoom(string roomId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
-            await Clients.Group(roomId).SendAsync("PlayerJoined", Context.ConnectionId);
+            
         }
 
         public async Task SendMessage(string roomId, string message)

@@ -1,9 +1,12 @@
-﻿using Application.Contratos.Lobby;
+﻿using Application.Common.Exceptions;
+using Application.Contratos.Lobby;
 using Application.Contratos.Salas;
 using Application.Interfaces;
+using Application.Mapeos; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using ProyecParadigBack.Hubs;
+using Microsoft.EntityFrameworkCore;
 
 namespace ProyecParadigBack.Controllers
 {
@@ -13,11 +16,13 @@ namespace ProyecParadigBack.Controllers
     {
         private readonly ISvSalas _svSalas;
         private readonly IHubContext<GameHub> _hub;
+        private readonly AppDbContext _db;
 
-        public SalasController(ISvSalas svSalas, IHubContext<GameHub> hub)
+        public SalasController(ISvSalas svSalas, IHubContext<GameHub> hub, AppDbContext db)
         {
             _svSalas = svSalas;
             _hub = hub;
+            _db = db;
         }
 
         // POST: api/salas
@@ -62,6 +67,24 @@ namespace ProyecParadigBack.Controllers
         {
             var marcador = await _svSalas.MarcadorAsync(salaId);
             return Ok(marcador);
+        }
+
+        // GET: api/salas/codigo/{codigo}
+        [HttpGet("codigo/{codigo}")]
+        public async Task<ActionResult<SalaDto>> ObtenerSalaPorCodigo(string codigo)
+        {
+            var codigoUpper = codigo.Trim().ToUpperInvariant();
+
+            var sala = await _db.Salas
+                .Include(s => s.Jugadores)
+                    .ThenInclude(sj => sj.Jugador)
+                .Include(s => s.Partidas)
+                .SingleOrDefaultAsync(s => s.CodigoIngreso == codigoUpper);
+
+            if (sala == null)
+                throw new NotFoundException($"Sala con código {codigo} no existe.");
+
+            return Ok(sala.ADto()); // Ahora debería funcionar
         }
     }
 }

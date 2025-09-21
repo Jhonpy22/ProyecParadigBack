@@ -27,7 +27,7 @@ namespace ProyecParadigBack.Controllers
         {
             var partida = await _svTurnos.VoltearAsync(request);
 
-            string salaCodigo = partida.SalaId.ToString();
+            string salaCodigo = partida.SalaCodigo;
 
             
             await _hub.Clients.Group(salaCodigo).SendAsync("GameUpdated", partida);
