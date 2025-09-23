@@ -29,7 +29,7 @@ namespace ProyecParadigBack.Notificadores
                         ganador = ganador?.Nombre ?? "Sin ganador",
                         puntajeGanador = ganador?.Puntaje ?? 0,
                         partidaId = partida.PartidaId,
-                        // Indicar que la sala vuelve a lobby
+                        
                         redirectToLobby = true
                     });
 

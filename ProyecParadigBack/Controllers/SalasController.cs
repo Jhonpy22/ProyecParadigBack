@@ -84,7 +84,7 @@ namespace ProyecParadigBack.Controllers
             if (sala == null)
                 throw new NotFoundException($"Sala con código {codigo} no existe.");
 
-            return Ok(sala.ADto()); // Ahora debería funcionar
+            return Ok(sala.ADto());
         }
     }
 }
