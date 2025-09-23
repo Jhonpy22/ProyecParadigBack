@@ -13,8 +13,7 @@ using ServicesApp;
 var builder = WebApplication.CreateBuilder(args);
 
 Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()  // captura todo desde Debug hacia arriba
-    .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning) // menos ruido de EF y ASP.NET
+    .MinimumLevel.Information() 
     .WriteTo.Console()
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
     .Enrich.FromLogContext()
