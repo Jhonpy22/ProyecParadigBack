@@ -30,6 +30,14 @@ namespace Application.Mapeos
                         Puntaje: j.Puntaje,
                         OrdenTurno: j.OrdenTurno
                     ))
+                    .ToList(),
+                Tablero: p.Tablero
+                    .OrderBy(c => c.Indice)
+                    .Select(c => new CartaTableroDto(
+                        Indice: c.Indice,
+                        ClavePareja: c.ClavePareja,
+                        EstaEmparejada: c.EstaEmparejada
+                    ))
                     .ToList()
             );
 

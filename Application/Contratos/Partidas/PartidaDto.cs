@@ -16,6 +16,7 @@
          int NumeroTurno,
          int? GanadorId,
          int? PuntajeGanador,
-         List<PartidaJugadorDto> Jugadores
+         List<PartidaJugadorDto> Jugadores,
+         List<CartaTableroDto> Tablero
         );
     }
