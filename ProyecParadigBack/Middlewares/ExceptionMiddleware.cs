@@ -1,8 +1,6 @@
 ﻿using Application.Common.Exceptions;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using Microsoft.AspNetCore.Hosting;      // Para IWebHostEnvironment
-using Microsoft.Extensions.Hosting;
 
 namespace ProyecParadigBack.Middlewares
 {
@@ -15,7 +13,7 @@ namespace ProyecParadigBack.Middlewares
         public ExceptionMiddleware(
             RequestDelegate next,
             ILogger<ExceptionMiddleware> logger,
-            IWebHostEnvironment env)      // <-- añadimos env
+            IWebHostEnvironment env)     
         {
             _next = next;
             _logger = logger;
@@ -43,7 +41,7 @@ namespace ProyecParadigBack.Middlewares
                 };
                 context.Response.StatusCode = statusCode;
 
-                // Construimos un diccionario para manejar dinámicamente el stackTrace
+                
                 var errorResponse = new Dictionary<string, object>
                 {
                     ["statusCode"] = statusCode,
@@ -53,7 +51,7 @@ namespace ProyecParadigBack.Middlewares
                     ["path"] = context.Request.Path
                 };
 
-                // Solo en Development incluimos la traza completa
+               
                 if (_env.IsDevelopment() && ex.StackTrace != null)
                 {
                     errorResponse["stackTrace"] = ex.StackTrace;
