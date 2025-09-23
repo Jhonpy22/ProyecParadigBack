@@ -45,7 +45,13 @@ namespace ServicesApp
 
                 await req.AplicarAsync(p);
 
-               
+                if (p.IndicePrimerVolteo == null && p.JugadorActualId.HasValue)
+                {
+                    
+                    _db.Entry(p).State = EntityState.Modified;
+                }
+
+                _db.Entry(p).State = EntityState.Modified;
                 var resultadoFinalizacion = await ProcesarFinalizacionAsync(p);
 
                 
@@ -153,11 +159,5 @@ namespace ServicesApp
         public string SalaCodigo { get; set; } = string.Empty;
         public PartidaDto PartidaDto { get; set; } = null!;
     }
-
-
-      
-
-
-
    
 }

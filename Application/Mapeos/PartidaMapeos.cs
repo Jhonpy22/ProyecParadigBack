@@ -18,10 +18,10 @@ namespace Application.Mapeos
                 Columnas: p.Columnas,
                 DuracionSegundos: p.DuracionSegundos,
                 IniciadaUtc: p.IniciadaUtc,
-                JugadorActualId: p.JugadorActualId ?? 0,
+                JugadorActualId: p.JugadorActualId,
                 NumeroTurno: p.NumeroTurno,
-                GanadorId: p.GanadorId ?? 0,
-                PuntajeGanador: p.PuntajeGanador ?? 0,
+                GanadorId: p.GanadorId,
+                PuntajeGanador: p.PuntajeGanador,
                 Jugadores: p.PartidaJugadores
                     .OrderBy(j => j.OrdenTurno)
                     .Select(j => new PartidaJugadorDto(
@@ -29,6 +29,14 @@ namespace Application.Mapeos
                         Nombre: j.Jugador.Nombre,
                         Puntaje: j.Puntaje,
                         OrdenTurno: j.OrdenTurno
+                    ))
+                    .ToList(),
+                Tablero: p.Tablero
+                    .OrderBy(c => c.Indice)
+                    .Select(c => new CartaTableroDto(
+                        Indice: c.Indice,
+                        ClavePareja: c.ClavePareja,
+                        EstaEmparejada: c.EstaEmparejada
                     ))
                     .ToList()
             );

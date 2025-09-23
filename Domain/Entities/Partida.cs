@@ -42,7 +42,8 @@ namespace Domain.Entities
         {
             if (duracionSegundos <= 0) throw new InvalidOperationException("La duración debe ser > 0.");
             DuracionSegundos = duracionSegundos;
-           
+            IniciadaUtc = DateTime.UtcNow;
+
         }
 
         public int PuntosPorPareja { get; private set; } = 1;

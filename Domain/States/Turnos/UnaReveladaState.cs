@@ -8,8 +8,12 @@ namespace Domain.States.Turnos
     {
         public Task VoltearAsync(Partida p, int jugadorId, int indice)
         {
+            var tiempoTranscurrido = (DateTime.UtcNow - p.IniciadaUtc).TotalSeconds;
+            Console.WriteLine($"TIEMPO CHECK - Transcurrido: {tiempoTranscurrido:F1}s de {p.DuracionSegundos}s, Expirada: {p.Expirada(DateTime.UtcNow)}");
+
             if (FinalizacionDePartida.DebeExpirar(p, DateTime.UtcNow))
             {
+                Console.WriteLine("PARTIDA EXPIRADA - Finalizando por tiempo agotado");
                 FinalizacionDePartida.FinalizarYVolverAlLobby(p);
                 return Task.CompletedTask;
             }
@@ -19,8 +23,8 @@ namespace Domain.States.Turnos
             if (p.IndicePrimerVolteo is null)
                 throw new InvalidOperationException("Estado inconsistente: no hay primer volteo.");
 
-            if (p.IndicePrimerVolteo.Value == indice)
-                throw new InvalidOperationException("No puedes seleccionar la misma carta.");
+            /*if (p.IndicePrimerVolteo.Value == indice)
+                throw new InvalidOperationException("No puedes seleccionar la misma carta.");*/
 
             var primera = GetPlayableCard(p, p.IndicePrimerVolteo.Value);
             var segunda = GetPlayableCard(p, indice);
@@ -57,7 +61,7 @@ namespace Domain.States.Turnos
             }
             else
             {
-
+                Console.WriteLine($"ANTES DEL CAMBIO - JugadorActual: {p.JugadorActualId}, Turno: {p.NumeroTurno}");
                 if (p.JugadorActualId.HasValue)
                 {
                     p.JugadorActualId = NextPlayerId(p);
@@ -67,7 +71,7 @@ namespace Domain.States.Turnos
 
                 p.IndicePrimerVolteo = null;
 
-                Console.WriteLine($"Turno cambiado -> JugadorActual={p.JugadorActualId}, NumeroTurno={p.NumeroTurno}");
+                Console.WriteLine($"DESPUÉS DEL CAMBIO - JugadorActual: {p.JugadorActualId}, Turno: {p.NumeroTurno}");
                 return Task.CompletedTask;
             }
         }
