@@ -23,8 +23,8 @@ namespace Domain.States.Turnos
             if (p.IndicePrimerVolteo is null)
                 throw new InvalidOperationException("Estado inconsistente: no hay primer volteo.");
 
-            if (p.IndicePrimerVolteo.Value == indice)
-                throw new InvalidOperationException("No puedes seleccionar la misma carta.");
+            /*if (p.IndicePrimerVolteo.Value == indice)
+                throw new InvalidOperationException("No puedes seleccionar la misma carta.");*/
 
             var primera = GetPlayableCard(p, p.IndicePrimerVolteo.Value);
             var segunda = GetPlayableCard(p, indice);

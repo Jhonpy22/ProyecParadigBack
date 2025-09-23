@@ -49,8 +49,8 @@ namespace ServicesApp
             switch (req.Dificultad)
             {
                 case Dificultad.Facil: dFilas = 2; dColumnas = 4; dDuracion = 90; dPuntos = 1; break;
-                case Dificultad.Medio: dFilas = 4; dColumnas = 4; dDuracion = 75; dPuntos = 2; break;
-                case Dificultad.Dificil: dFilas = 4; dColumnas = 6; dDuracion = 60; dPuntos = 3; break;
+                case Dificultad.Medio: dFilas = 4; dColumnas = 4; dDuracion = 120; dPuntos = 2; break;
+                case Dificultad.Dificil: dFilas = 4; dColumnas = 6; dDuracion = 150; dPuntos = 3; break;
                 default:
                     _logger.LogWarning("Dificultad {Dificultad} no soportada en SalaId={SalaId}", req.Dificultad, req.SalaId);
                     throw new BusinessException("Dificultad no soportada.");
